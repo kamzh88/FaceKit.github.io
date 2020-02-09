@@ -1,12 +1,100 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import _ from "lodash";
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import Typography from "@material-ui/core/Typography";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import LoginForm from "./components/LoginForm";
+import { fireAuth } from "./fireApi";
+import withAuthProtection from "./withAuthProtection";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const Wrapper = props => (
+  <div style={{ maxWidth: 400, padding: 16, margin: "auto" }} {...props} />
+);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const ProtectedProfile = withAuthProtection("/login")(Profile);
+
+class App extends React.Component {
+  constructor() {
+    super();
+    console.log("user", fireAuth.currentUser);
+    this.state = {
+      me: fireAuth.currentUser
+    };
+  }
+
+  componentDidMount() {
+    fireAuth.onAuthStateChanged(me => {
+      this.setState({ me });
+    });
+  }
+
+  handleSignIn = history => (email, password) => {
+    return fireAuth.signInWithEmailAndPassword(email, password).then(() => {
+      return history.push("/profile");
+    });
+  };
+
+  render() {
+    const { me } = this.state;
+    const email = _.get(me, "email");
+    return (
+      <BrowserRouter>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={() => (
+              <Wrapper>
+                <Link to="/login" style={{ marginRight: 16 }}>
+                  Login
+                </Link>
+                <Link to="/public" style={{ marginRight: 16 }}>
+                  Public
+                </Link>
+                <Link to="/profile">Profile</Link>
+                <Home />
+              </Wrapper>
+            )}
+          />
+          <Route
+            path="/login"
+            exact
+            render={({ history }) => (
+              <Wrapper>
+                <Link to="/">Home</Link>
+                <LoginForm onSubmit={this.handleSignIn(history)} />
+              </Wrapper>
+            )}
+          />
+          <Route
+            path="/profile"
+            exact
+            render={props => (
+              <Wrapper>
+                <Link to="/">Home</Link>
+                <ProtectedProfile {...props} me={me} displayName={email} />
+              </Wrapper>
+            )}
+          />
+          <Route
+            path="/public"
+            exact
+            render={() => (
+              <Wrapper>
+                <Link to="/">Home</Link>
+                <Typography variant="h4">
+                  Public Route, anyone can see this page.
+                </Typography>
+              </Wrapper>
+            )}
+          />
+        </Switch>
+      </BrowserRouter>
+    );
+  }
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
