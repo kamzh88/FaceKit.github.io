@@ -11,7 +11,7 @@ class LoginForm extends Component {
         password: '',
         submitting: false
     };
-    
+
     handleSubmit = e => {
         e.preventDefault();
         const { onSubmit } = this.props;
@@ -73,7 +73,14 @@ class LoginForm extends Component {
                             )}
                     </Button>
                 </form>
-                
+
+                {/* <BrowserRouter>
+                    <Switch>
+                        <Link to="/SignUp">
+                            SignUp
+                        </Link>
+                    </Switch>
+                </BrowserRouter> */}
             </Fragment>
         )
     }

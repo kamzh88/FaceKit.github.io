@@ -8,6 +8,7 @@ import withAuthProtection from "./withAuthProtection";
 import Profile from "./pages/Profile";
 import _ from "lodash";
 import Typography from "@material-ui/core/Typography";
+import SignUpForm from "./components/SignUpForm";
 
 const ProtectedProfile = withAuthProtection("/login")(Profile);
 
@@ -28,6 +29,10 @@ class App extends Component {
       return history.push("/profile");
     });
   };
+
+  handleSignUp = history => (email, password) => {
+    
+  }
 
   render() {
     const { me } = this.state;
@@ -53,6 +58,13 @@ class App extends Component {
             <Wrapper>
               <Link to="/">Home</Link>
               <LoginForm onSubmit={this.handleSignIn(history)} />
+              <Link to="/Signup">SIGNUP</Link>
+            </Wrapper>
+          )}
+          />
+          <Route path="/Signup" exact render={({ history }) => (
+            <Wrapper>
+              <SignUpForm />
             </Wrapper>
           )}
           />
