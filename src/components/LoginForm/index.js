@@ -74,13 +74,6 @@ class LoginForm extends Component {
                     </Button>
                 </form>
 
-                {/* <BrowserRouter>
-                    <Switch>
-                        <Link to="/SignUp">
-                            SignUp
-                        </Link>
-                    </Switch>
-                </BrowserRouter> */}
             </Fragment>
         )
     }

@@ -64,6 +64,7 @@ class App extends Component {
           />
           <Route path="/Signup" exact render={({ history }) => (
             <Wrapper>
+              <Link to="/">Home</Link>
               <SignUpForm />
             </Wrapper>
           )}
