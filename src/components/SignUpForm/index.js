@@ -72,7 +72,6 @@ class SignUpForm extends Component {
                         ) : (
                                 "Submit"
                             )}
-
                     </Button>
                 </form>
             </Fragment>

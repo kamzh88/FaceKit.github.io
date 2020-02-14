@@ -24,20 +24,23 @@ class App extends Component {
     });
   }
 
-  handleSignIn = history =>  (email, password) => {
+  handleSignIn = history => (email, password) => {
     return fireAuth.signInWithEmailAndPassword(email, password).then(() => {
       return history.push("/profile");
     });
   };
 
   handleSignUp = history => (email, password) => {
-    
+    console.log(email);
+    return fireAuth.createUserWithEmailAndPassword(email, password).then(() => {
+      return history.push("/profile");
+    })
   }
 
   render() {
     const { me } = this.state;
     const email = _.get(me, "email");
-    
+
     return (
       <BrowserRouter>
         <Switch>
@@ -65,13 +68,13 @@ class App extends Component {
           <Route path="/Signup" exact render={({ history }) => (
             <Wrapper>
               <Link to="/">Home</Link>
-              <SignUpForm />
+              <SignUpForm onSubmit={this.handleSignUp(history)}/>
             </Wrapper>
           )}
           />
           <Route
             exact
-            path="/profile" 
+            path="/profile"
             render={props => (
               <Wrapper>
                 <Link to="/">Home</Link>
